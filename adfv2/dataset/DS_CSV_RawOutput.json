@@ -12,10 +12,10 @@
 			"DestLayer": {
 				"type": "string"
 			},
-			"Filename": {
+			"EntityName": {
 				"type": "string"
 			},
-			"EntityName": {
+			"RootFolderName": {
 				"type": "string"
 			}
 		},
@@ -25,11 +25,11 @@
 			"location": {
 				"type": "AzureBlobFSLocation",
 				"fileName": {
-					"value": "@concat(dataset().Filename, '.csv')",
+					"value": "@concat(dataset().EntityName, '.csv')",
 					"type": "Expression"
 				},
 				"folderPath": {
-					"value": "@concat(dataset().DestLayer,'/', string(dataset().DataHistoryID), '/', dataset().EntityName)",
+					"value": "@concat(dataset().DestLayer,'/',dataset().RootFolderName,'/', string(dataset().DataHistoryID), '/', dataset().EntityName)",
 					"type": "Expression"
 				},
 				"fileSystem": "data"

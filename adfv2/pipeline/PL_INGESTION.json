@@ -213,7 +213,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('AC_LKP_SP_IngestEntitiesToRaw').output",
+						"value": "@activity('AC_LKP_SP_IngestEntitiesToRaw').output.value",
 						"type": "Expression"
 					},
 					"activities": [
@@ -280,12 +280,12 @@
 											"value": "@item().DestinationLayer",
 											"type": "Expression"
 										},
-										"Filename": {
-											"value": "@item().DestinationSubject",
-											"type": "Expression"
-										},
 										"EntityName": {
 											"value": "@item().DestinationEntity",
+											"type": "Expression"
+										},
+										"RootFolderName": {
+											"value": "@item().SourceSubject",
 											"type": "Expression"
 										}
 									}
