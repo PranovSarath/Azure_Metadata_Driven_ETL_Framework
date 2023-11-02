@@ -211,6 +211,10 @@
 				],
 				"userProperties": [],
 				"typeProperties": {
+					"items": {
+						"value": "@activity('AC_LKP_SP_IngestEntitiesToRaw').output",
+						"type": "Expression"
+					},
 					"activities": [
 						{
 							"name": "AC_COPY_Entity_FROM_SRC_TO_RAW",
@@ -225,8 +229,67 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"enableStaging": false
-							}
+								"source": {
+									"type": "SqlServerSource",
+									"sqlReaderQuery": {
+										"value": "@concat('SELECT * FROM ', item().SourceSubject, '.', item().SourceEntityName)",
+										"type": "Expression"
+									},
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "DelimitedTextSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings",
+										"copyBehavior": "FlattenHierarchy"
+									},
+									"formatSettings": {
+										"type": "DelimitedTextWriteSettings",
+										"quoteAllText": true,
+										"fileExtension": ".csv"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "SqlServerTable1",
+									"type": "DatasetReference"
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "DS_CSV_RawOutput",
+									"type": "DatasetReference",
+									"parameters": {
+										"DataHistoryID": {
+											"value": "@variables('DataLoadHistoryID')",
+											"type": "Expression"
+										},
+										"DestLayer": {
+											"value": "@item().DestinationLayer",
+											"type": "Expression"
+										},
+										"Filename": {
+											"value": "@item().DestinationSubject",
+											"type": "Expression"
+										},
+										"EntityName": {
+											"value": "@item().DestinationEntity",
+											"type": "Expression"
+										}
+									}
+								}
+							]
 						}
 					]
 				}

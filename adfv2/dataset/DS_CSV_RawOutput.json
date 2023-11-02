@@ -1,0 +1,44 @@
+{
+	"name": "DS_CSV_RawOutput",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_Az_ADLS_Gen2",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"DataHistoryID": {
+				"type": "int"
+			},
+			"DestLayer": {
+				"type": "string"
+			},
+			"Filename": {
+				"type": "string"
+			},
+			"EntityName": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@concat(dataset().Filename, '.csv')",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@concat(dataset().DestLayer,'/', string(dataset().DataHistoryID), '/', dataset().EntityName)",
+					"type": "Expression"
+				},
+				"fileSystem": "data"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
