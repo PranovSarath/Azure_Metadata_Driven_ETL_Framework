@@ -129,6 +129,32 @@
 						"type": "Expression"
 					}
 				}
+			},
+			{
+				"name": "AC_LKP_SP_IngestEntitiesToRaw",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "AC_SETVAR_DataHistoryID",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "AC_SETVAR_PipelineRunsID",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": []
 			}
 		],
 		"parameters": {
