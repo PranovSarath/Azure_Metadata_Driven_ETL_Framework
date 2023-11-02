@@ -1,0 +1,11 @@
+{
+	"name": "LS_Az_KeyVault",
+	"properties": {
+		"description": "Linked Service to connect to the Key Vault",
+		"annotations": [],
+		"type": "AzureKeyVault",
+		"typeProperties": {
+			"baseUrl": "https://az-eastus-kv-dev-001.vault.azure.net/"
+		}
+	}
+}
