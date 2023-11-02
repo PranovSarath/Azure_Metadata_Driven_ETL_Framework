@@ -197,6 +197,39 @@
 						"type": "DatasetReference"
 					}
 				}
+			},
+			{
+				"name": "AC_ForEach_SourceEntity",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "AC_LKP_SP_IngestEntitiesToRaw",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"activities": [
+						{
+							"name": "AC_COPY_Entity_FROM_SRC_TO_RAW",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"enableStaging": false
+							}
+						}
+					]
+				}
 			}
 		],
 		"parameters": {
