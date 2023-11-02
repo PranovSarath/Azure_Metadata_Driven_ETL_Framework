@@ -77,7 +77,7 @@
 						"partitionOption": "None"
 					},
 					"dataset": {
-						"referenceName": "AzureSqlTable1",
+						"referenceName": "DS_Az_SQL_ControlDB",
 						"type": "DatasetReference"
 					}
 				}
@@ -154,7 +154,49 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
-				"userProperties": []
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderStoredProcedureName": "[ETL].[usp_lookupEntitiesToProcess]",
+						"storedProcedureParameters": {
+							"DestLayer": {
+								"type": "String",
+								"value": {
+									"value": "Raw",
+									"type": "Expression"
+								}
+							},
+							"DestSubject": {
+								"type": "String",
+								"value": {
+									"value": "@concat(pipeline().parameters.SubjectName, '_Raw')",
+									"type": "Expression"
+								}
+							},
+							"SourceLayer": {
+								"type": "String",
+								"value": {
+									"value": "Source",
+									"type": "Expression"
+								}
+							},
+							"SourceSubject": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().parameters.SubjectName",
+									"type": "Expression"
+								}
+							}
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "DS_Az_SQL_ControlDB",
+						"type": "DatasetReference"
+					}
+				}
 			}
 		],
 		"parameters": {

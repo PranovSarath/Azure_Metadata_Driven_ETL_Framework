@@ -1,5 +1,5 @@
 {
-	"name": "AzureSqlTable1",
+	"name": "DS_Az_SQL_ControlDB",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "LS_Az_SQL_Control_DB",
