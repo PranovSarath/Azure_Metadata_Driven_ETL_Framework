@@ -195,7 +195,8 @@
 					"dataset": {
 						"referenceName": "DS_Az_SQL_ControlDB",
 						"type": "DatasetReference"
-					}
+					},
+					"firstRowOnly": false
 				}
 			},
 			{
