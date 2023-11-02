@@ -3,8 +3,8 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "AC_SP_CreateDataHistoryID",
-				"type": "SqlServerStoredProcedure",
+				"name": "AC_LKP_SP_CreateDataHistoryID",
+				"type": "Lookup",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -14,12 +14,141 @@
 					"secureInput": false
 				},
 				"userProperties": [],
-				"linkedServiceName": {
-					"referenceName": "LS_Az_SQL_Control_DB",
-					"type": "LinkedServiceReference"
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderStoredProcedureName": "[ETL].[usp_createNewDataLoadHistoryID]",
+						"storedProcedureParameters": {
+							"DataHistoryDescription": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().parameters.Description",
+									"type": "Expression"
+								}
+							},
+							"DestinationSubjectName": {
+								"type": "String",
+								"value": {
+									"value": "@concat(pipeline().parameters.SubjectName, '_Raw')",
+									"type": "Expression"
+								}
+							},
+							"ExecutionStartTime": {
+								"type": "DateTime",
+								"value": {
+									"value": "@pipeline().TriggerTime",
+									"type": "Expression"
+								}
+							},
+							"ParametersList": {
+								"type": "String",
+								"value": {
+									"value": "@concat('SubjectName: ', pipeline().parameters.SubjectName, ', Description: ', pipeline().parameters.Description)",
+									"type": "Expression"
+								}
+							},
+							"PipelineName": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().Pipeline",
+									"type": "Expression"
+								}
+							},
+							"RunID": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().RunId",
+									"type": "Expression"
+								}
+							},
+							"SourceSubjectName": {
+								"type": "String",
+								"value": {
+									"value": "@pipeline().parameters.SubjectName",
+									"type": "Expression"
+								}
+							},
+							"Status": {
+								"type": "String",
+								"value": "In Progress"
+							}
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "AzureSqlTable1",
+						"type": "DatasetReference"
+					}
+				}
+			},
+			{
+				"name": "AC_SETVAR_DataHistoryID",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "AC_LKP_SP_CreateDataHistoryID",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "DataLoadHistoryID",
+					"value": {
+						"value": "@activity('AC_LKP_SP_CreateDataHistoryID').output.firstRow.DataLoadHistoryID",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "AC_SETVAR_PipelineRunsID",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "AC_LKP_SP_CreateDataHistoryID",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "PipelineRunID",
+					"value": {
+						"value": "@activity('AC_LKP_SP_CreateDataHistoryID').output.firstRow.PipelineRunsID",
+						"type": "Expression"
+					}
 				}
 			}
 		],
+		"parameters": {
+			"SubjectName": {
+				"type": "string",
+				"defaultValue": "Sales"
+			},
+			"Description": {
+				"type": "string",
+				"defaultValue": "First Test of Sales Data Load"
+			}
+		},
+		"variables": {
+			"DataLoadHistoryID": {
+				"type": "Integer"
+			},
+			"PipelineRunID": {
+				"type": "Integer"
+			}
+		},
 		"annotations": []
 	}
 }
