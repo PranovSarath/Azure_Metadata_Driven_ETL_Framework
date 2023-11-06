@@ -32,7 +32,7 @@
 					"value": "@concat(dataset().DestLayer,'/',dataset().RootFolderName,'/', string(dataset().DataHistoryID), '/', dataset().EntityName)",
 					"type": "Expression"
 				},
-				"fileSystem": "data"
+				"fileSystem": "raw"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",
