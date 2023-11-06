@@ -29,10 +29,13 @@
 					"type": "Expression"
 				},
 				"folderPath": {
-					"value": "@concat(dataset().DestLayer,'/',dataset().RootFolderName,'/', string(dataset().DataHistoryID), '/', dataset().EntityName)",
+					"value": "@concat(dataset().RootFolderName,'/', string(dataset().DataHistoryID), '/', dataset().EntityName)",
 					"type": "Expression"
 				},
-				"fileSystem": "raw"
+				"fileSystem": {
+					"value": "@toLower(dataset().RootFolderName)",
+					"type": "Expression"
+				}
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",
