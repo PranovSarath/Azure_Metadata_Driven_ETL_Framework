@@ -33,7 +33,7 @@
 					"type": "Expression"
 				},
 				"fileSystem": {
-					"value": "@toLower(dataset().RootFolderName)",
+					"value": "@toLower(dataset().DestLayer)",
 					"type": "Expression"
 				}
 			},
