@@ -323,11 +323,11 @@
 										"type": "Expression"
 									},
 									"sourceSubjectID": {
-										"value": "@item().SourceSubjectID",
+										"value": "@string(item().SourceSubjectID)",
 										"type": "Expression"
 									},
 									"sourceEntityID": {
-										"value": "@item().SourceEntityID",
+										"value": "@string(item().SourceEntityID)",
 										"type": "Expression"
 									},
 									"targetSubjectName": {
@@ -339,15 +339,15 @@
 										"type": "Expression"
 									},
 									"targetSubjectID": {
-										"value": "@item().DestinationSubjectID",
+										"value": "@string(item().DestinationSubjectID)",
 										"type": "Expression"
 									},
 									"targetEntityID": {
-										"value": "@item().DestinationEntityID",
+										"value": "@string(item().DestinationEntityID)",
 										"type": "Expression"
 									},
 									"dataHistoryID": {
-										"value": "@variables('DataLoadHistoryID')",
+										"value": "@string(variables('DataLoadHistoryID'))",
 										"type": "Expression"
 									},
 									"IngestionTime": {
