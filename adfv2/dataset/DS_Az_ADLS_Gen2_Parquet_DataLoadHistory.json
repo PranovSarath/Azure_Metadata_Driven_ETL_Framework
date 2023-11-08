@@ -1,0 +1,21 @@
+{
+	"name": "DS_Az_ADLS_Gen2_Parquet_DataLoadHistory",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_Az_ADLS_Gen2",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "DataLoadHistory.parquet",
+				"folderPath": "config",
+				"fileSystem": "raw"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	}
+}
