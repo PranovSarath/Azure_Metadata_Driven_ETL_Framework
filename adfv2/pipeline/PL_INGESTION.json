@@ -312,7 +312,7 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"notebookPath": "/Users/ps521@sussex.ac.uk/Cleansed/nb_cleanseEntity",
+								"notebookPath": "/Users/ps521@sussex.ac.uk/databricks/Cleansed/nb_cleanseEntity",
 								"baseParameters": {
 									"sourceSubjectName": {
 										"value": "@item().SourceSubject",
