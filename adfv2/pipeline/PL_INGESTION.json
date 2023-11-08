@@ -291,6 +291,75 @@
 									}
 								}
 							]
+						},
+						{
+							"name": "AC_ADB_CleanseSourceEntity",
+							"type": "DatabricksNotebook",
+							"dependsOn": [
+								{
+									"activity": "AC_COPY_Entity_FROM_SRC_TO_RAW",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"notebookPath": "/Users/ps521@sussex.ac.uk/Cleansed/nb_cleanseEntity",
+								"baseParameters": {
+									"sourceSubjectName": {
+										"value": "@item().SourceSubject",
+										"type": "Expression"
+									},
+									"sourceEntityName": {
+										"value": "@item().SourceEntityName",
+										"type": "Expression"
+									},
+									"sourceSubjectID": {
+										"value": "@item().SourceSubjectID",
+										"type": "Expression"
+									},
+									"sourceEntityID": {
+										"value": "@item().SourceEntityID",
+										"type": "Expression"
+									},
+									"targetSubjectName": {
+										"value": "@item().DestinationSubject",
+										"type": "Expression"
+									},
+									"targetEntityName": {
+										"value": "@item().DestinationEntity",
+										"type": "Expression"
+									},
+									"targetSubjectID": {
+										"value": "@item().DestinationSubjectID",
+										"type": "Expression"
+									},
+									"targetEntityID": {
+										"value": "@item().DestinationEntityID",
+										"type": "Expression"
+									},
+									"dataHistoryID": {
+										"value": "@variables('DataLoadHistoryID')",
+										"type": "Expression"
+									},
+									"IngestionTime": {
+										"value": "@string(pipeline().TriggerTime)",
+										"type": "Expression"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "LS_Az_Databricks",
+								"type": "LinkedServiceReference"
+							}
 						}
 					]
 				}
