@@ -363,6 +363,88 @@
 						}
 					]
 				}
+			},
+			{
+				"name": "AC_LKP_SP_Transform_CleansedEntities",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "AC_ForEach_SourceEntity",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderStoredProcedureName": "[ETL].[usp_lookupEntitiesToProcess]",
+						"storedProcedureParameters": {
+							"DestLayer": {
+								"type": "String",
+								"value": {
+									"value": "Transformed",
+									"type": "Expression"
+								}
+							},
+							"DestSubject": {
+								"type": "String",
+								"value": {
+									"value": "@concat(pipeline().parameters.SubjectName, '_Trans')",
+									"type": "Expression"
+								}
+							},
+							"SourceLayer": {
+								"type": "String",
+								"value": {
+									"value": "Cleansed",
+									"type": "Expression"
+								}
+							},
+							"SourceSubject": {
+								"type": "String",
+								"value": {
+									"value": "@concat(pipeline().parameters.SubjectName, '_Cleansed')",
+									"type": "Expression"
+								}
+							}
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "DS_Az_SQL_ControlDB",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "AC_ForEach_CleansedEntity",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "AC_LKP_SP_Transform_CleansedEntities",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('AC_LKP_SP_Transform_CleansedEntities').output.value",
+						"type": "Expression"
+					}
+				}
 			}
 		],
 		"parameters": {
