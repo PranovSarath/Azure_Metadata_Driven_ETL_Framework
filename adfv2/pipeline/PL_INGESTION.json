@@ -438,7 +438,7 @@
 						]
 					},
 					{
-						"activity": "AC_DataCopy_DataHistoryID",
+						"activity": "AC_ADB_CreateOrUpdateDataLoadHistory",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -517,7 +517,7 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "AC_SETVAR_DataHistoryID",
+						"activity": "AC_IF_Incremental",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -534,6 +534,10 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
+						"sqlReaderQuery": {
+							"value": "@concat('SELECT * FROM [config].[DataLoadHistory]', variables('FIlterCondition'))",
+							"type": "Expression"
+						},
 						"queryTimeout": "02:00:00",
 						"isolationLevel": "ReadCommitted",
 						"partitionOption": "None"
@@ -656,6 +660,78 @@
 						"type": "DatasetReference"
 					}
 				]
+			},
+			{
+				"name": "AC_IF_Incremental",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "AC_SETVAR_DataHistoryID",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@pipeline().parameters.IsIncremental",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "AC_SET_VAR_FilterCondition_Incremental",
+							"description": "The variable 'FilterCondition' is set to the exact DataHistoryID if Incremental Load is happening.",
+							"type": "SetVariable",
+							"dependsOn": [],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "FIlterCondition",
+								"value": {
+									"value": "@concat(' WHERE [DataLoadHistoryID] = ', string(variables('DataLoadHistoryID')))",
+									"type": "Expression"
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "AC_ADB_CreateOrUpdateDataLoadHistory",
+				"type": "DatabricksNotebook",
+				"dependsOn": [
+					{
+						"activity": "AC_DataCopy_DataHistoryID",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Users/ps521@sussex.ac.uk/databricks/Config/nb_createDataLoadHistoryTable",
+					"baseParameters": {
+						"IsIncremental": {
+							"value": "@string(pipeline().parameters.IsIncremental)",
+							"type": "Expression"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "LS_Az_Databricks",
+					"type": "LinkedServiceReference"
+				}
 			}
 		],
 		"parameters": {
@@ -666,6 +742,10 @@
 			"Description": {
 				"type": "string",
 				"defaultValue": "First Test of Sales Data Load"
+			},
+			"IsIncremental": {
+				"type": "bool",
+				"defaultValue": "False"
 			}
 		},
 		"variables": {
@@ -674,6 +754,9 @@
 			},
 			"PipelineRunID": {
 				"type": "Integer"
+			},
+			"FIlterCondition": {
+				"type": "String"
 			}
 		},
 		"annotations": []
