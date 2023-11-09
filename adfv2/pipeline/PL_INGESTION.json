@@ -745,7 +745,7 @@
 			},
 			"IsIncremental": {
 				"type": "bool",
-				"defaultValue": "False"
+				"defaultValue": false
 			}
 		},
 		"variables": {
