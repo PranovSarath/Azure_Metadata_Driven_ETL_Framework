@@ -11,6 +11,8 @@ try:
 
     #Import types from the pyspark.sql module for defining schema and data types.
     from pyspark.sql.types import *
+
+    from delta.tables import *
 except Exception as e:
     print(f'Encounter exception while importing standard modules and functions\nError: {str(e)}')
 

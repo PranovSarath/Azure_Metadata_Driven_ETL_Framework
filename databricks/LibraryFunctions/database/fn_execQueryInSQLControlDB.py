@@ -18,4 +18,6 @@ def fn_execQueryInSQLControlDB(query):
         con.close()
         print('Query Successfully executed on the database')
     except Exception as e:
+        exec_query.close()
+        con.close()
         print(f'Query execution on the database failed with error : {str(e)}')
