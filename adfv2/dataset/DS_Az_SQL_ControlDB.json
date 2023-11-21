@@ -1,0 +1,51 @@
+{
+	"name": "DS_Az_SQL_ControlDB",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "LS_Az_SQL_Control_DB",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "DataLoadHistoryID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "DataLoadName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DataLoadDescription",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SubjectID",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "Subject",
+				"type": "nvarchar"
+			},
+			{
+				"name": "LastUpdateTime",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "CreatedTime",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			}
+		],
+		"typeProperties": {
+			"schema": "config",
+			"table": "DataLoadHistory"
+		}
+	}
+}

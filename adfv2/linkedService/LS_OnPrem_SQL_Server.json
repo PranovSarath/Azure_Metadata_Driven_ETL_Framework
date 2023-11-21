@@ -1,0 +1,23 @@
+{
+	"name": "LS_OnPrem_SQL_Server",
+	"properties": {
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"connectionString": "Integrated Security=True;Data Source=azeastusvmdev00;Initial Catalog=AdventureWorks2022",
+			"userName": "pranov03",
+			"password": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "LS_Az_KeyVault",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "adventureworks-db-password"
+			}
+		},
+		"connectVia": {
+			"referenceName": "selfhosted-ir-001",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

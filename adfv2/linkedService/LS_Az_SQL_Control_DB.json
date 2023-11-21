@@ -1,0 +1,19 @@
+{
+	"name": "LS_Az_SQL_Control_DB",
+	"properties": {
+		"description": "Linked Service to connect to the Control DB",
+		"annotations": [],
+		"type": "AzureSqlDatabase",
+		"typeProperties": {
+			"connectionString": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=az-eastus-sql-server-dev-001.database.windows.net;Initial Catalog=az-eastus-sql-db-control-dev-001;User ID=sqladmin",
+			"password": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "LS_Az_KeyVault",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "controldb-admin-password"
+			}
+		}
+	}
+}
