@@ -11,4 +11,8 @@
 
 # COMMAND ----------
 
+# MAGIC %run ./transformed/transformed_master
 
+# COMMAND ----------
+
+# MAGIC %run ./curated/curated_master
