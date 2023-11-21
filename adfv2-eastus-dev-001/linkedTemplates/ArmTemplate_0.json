@@ -1,0 +1,1119 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "adfv2-eastus-dev-001"
+		},
+		"LS_Az_SQL_Control_DB_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'LS_Az_SQL_Control_DB'",
+			"defaultValue": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=az-eastus-sql-server-dev-001.database.windows.net;Initial Catalog=az-eastus-sql-db-control-dev-001;User ID=sqladmin"
+		},
+		"LS_OnPrem_SQL_Server_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'LS_OnPrem_SQL_Server'",
+			"defaultValue": "Integrated Security=True;Data Source=azeastusvmdev00;Initial Catalog=AdventureWorks2022"
+		},
+		"LS_Az_ADLS_Gen2_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://adlsg2dev001.dfs.core.windows.net/"
+		},
+		"LS_Az_KeyVault_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://az-eastus-kv-dev-001.vault.azure.net/"
+		},
+		"LS_Az_Databricks_properties_typeProperties_existingClusterId": {
+			"type": "string",
+			"defaultValue": "1106-163335-sbw8d0ph"
+		},
+		"LS_OnPrem_SQL_Server_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "pranov03"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/LS_Az_ADLS_Gen2')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('LS_Az_ADLS_Gen2_properties_typeProperties_url')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LS_Az_KeyVault')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Linked Service to connect to the Key Vault",
+				"annotations": [],
+				"type": "AzureKeyVault",
+				"typeProperties": {
+					"baseUrl": "[parameters('LS_Az_KeyVault_properties_typeProperties_baseUrl')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/selfhosted-ir-001')]",
+			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "SelfHosted",
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DS_Az_ADLS_Gen2_DataLoadHistory')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_Az_ADLS_Gen2",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "DataLoadHistory.csv",
+						"folderPath": "config",
+						"fileSystem": "raw"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_Az_ADLS_Gen2')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DS_Az_ADLS_Gen2_Parquet_DataLoadHistory')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_Az_ADLS_Gen2",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "DataLoadHistory.parquet",
+						"folderPath": "config",
+						"fileSystem": "raw"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_Az_ADLS_Gen2')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DS_CSV_RawOutput')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_Az_ADLS_Gen2",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"DataHistoryID": {
+						"type": "int"
+					},
+					"DestLayer": {
+						"type": "string"
+					},
+					"EntityName": {
+						"type": "string"
+					},
+					"RootFolderName": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@concat(dataset().EntityName, '.csv')",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@concat(dataset().RootFolderName,'/', string(dataset().DataHistoryID), '/', dataset().EntityName)",
+							"type": "Expression"
+						},
+						"fileSystem": {
+							"value": "@toLower(dataset().DestLayer)",
+							"type": "Expression"
+						}
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_Az_ADLS_Gen2')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LS_Az_Databricks')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureDatabricks",
+				"typeProperties": {
+					"domain": "https://adb-8870592201533720.0.azuredatabricks.net",
+					"accessToken": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "LS_Az_KeyVault",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "adb-personal-access-token"
+					},
+					"existingClusterId": "[parameters('LS_Az_Databricks_properties_typeProperties_existingClusterId')]"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_Az_KeyVault')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LS_Az_SQL_Control_DB')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Linked Service to connect to the Control DB",
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('LS_Az_SQL_Control_DB_connectionString')]",
+					"password": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "LS_Az_KeyVault",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "controldb-admin-password"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_Az_KeyVault')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LS_OnPrem_SQL_Server')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('LS_OnPrem_SQL_Server_connectionString')]",
+					"userName": "[parameters('LS_OnPrem_SQL_Server_properties_typeProperties_userName')]",
+					"password": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "LS_Az_KeyVault",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "adventureworks-db-password"
+					}
+				},
+				"connectVia": {
+					"referenceName": "selfhosted-ir-001",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/selfhosted-ir-001')]",
+				"[concat(variables('factoryId'), '/linkedServices/LS_Az_KeyVault')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/DS_Az_SQL_ControlDB')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_Az_SQL_Control_DB",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [
+					{
+						"name": "DataLoadHistoryID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "DataLoadName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DataLoadDescription",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SubjectID",
+						"type": "int",
+						"precision": 10
+					},
+					{
+						"name": "Subject",
+						"type": "nvarchar"
+					},
+					{
+						"name": "LastUpdateTime",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					},
+					{
+						"name": "CreatedTime",
+						"type": "datetime",
+						"precision": 23,
+						"scale": 3
+					}
+				],
+				"typeProperties": {
+					"schema": "config",
+					"table": "DataLoadHistory"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_Az_SQL_Control_DB')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SqlServerTable1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "LS_OnPrem_SQL_Server",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [],
+				"typeProperties": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/LS_OnPrem_SQL_Server')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/PL_INGESTION')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "AC_LKP_SP_CreateDataHistoryID",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderStoredProcedureName": "[[ETL].[usp_createNewDataLoadHistoryID]",
+								"storedProcedureParameters": {
+									"DataHistoryDescription": {
+										"type": "String",
+										"value": {
+											"value": "@pipeline().parameters.Description",
+											"type": "Expression"
+										}
+									},
+									"DestinationSubjectName": {
+										"type": "String",
+										"value": {
+											"value": "@concat(pipeline().parameters.SubjectName, '_Raw')",
+											"type": "Expression"
+										}
+									},
+									"ExecutionStartTime": {
+										"type": "DateTime",
+										"value": {
+											"value": "@pipeline().TriggerTime",
+											"type": "Expression"
+										}
+									},
+									"ParametersList": {
+										"type": "String",
+										"value": {
+											"value": "@concat('SubjectName: ', pipeline().parameters.SubjectName, ', Description: ', pipeline().parameters.Description)",
+											"type": "Expression"
+										}
+									},
+									"PipelineName": {
+										"type": "String",
+										"value": {
+											"value": "@pipeline().Pipeline",
+											"type": "Expression"
+										}
+									},
+									"RunID": {
+										"type": "String",
+										"value": {
+											"value": "@pipeline().RunId",
+											"type": "Expression"
+										}
+									},
+									"SourceSubjectName": {
+										"type": "String",
+										"value": {
+											"value": "@pipeline().parameters.SubjectName",
+											"type": "Expression"
+										}
+									},
+									"Status": {
+										"type": "String",
+										"value": "In Progress"
+									}
+								},
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "DS_Az_SQL_ControlDB",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						}
+					},
+					{
+						"name": "AC_SETVAR_DataHistoryID",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "AC_LKP_SP_CreateDataHistoryID",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "DataLoadHistoryID",
+							"value": {
+								"value": "@activity('AC_LKP_SP_CreateDataHistoryID').output.firstRow.DataLoadHistoryID",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "AC_SETVAR_PipelineRunsID",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "AC_LKP_SP_CreateDataHistoryID",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "PipelineRunID",
+							"value": {
+								"value": "@activity('AC_LKP_SP_CreateDataHistoryID').output.firstRow.PipelineRunsID",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "AC_LKP_SP_IngestEntitiesToRaw",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "AC_SETVAR_DataHistoryID",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "AC_SETVAR_PipelineRunsID",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderStoredProcedureName": "[[ETL].[usp_lookupEntitiesToProcess]",
+								"storedProcedureParameters": {
+									"DestLayer": {
+										"type": "String",
+										"value": {
+											"value": "Raw",
+											"type": "Expression"
+										}
+									},
+									"DestSubject": {
+										"type": "String",
+										"value": {
+											"value": "@concat(pipeline().parameters.SubjectName, '_Raw')",
+											"type": "Expression"
+										}
+									},
+									"SourceLayer": {
+										"type": "String",
+										"value": {
+											"value": "Source",
+											"type": "Expression"
+										}
+									},
+									"SourceSubject": {
+										"type": "String",
+										"value": {
+											"value": "@pipeline().parameters.SubjectName",
+											"type": "Expression"
+										}
+									}
+								},
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "DS_Az_SQL_ControlDB",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "AC_ForEach_SourceEntity",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "AC_LKP_SP_IngestEntitiesToRaw",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('AC_LKP_SP_IngestEntitiesToRaw').output.value",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "AC_COPY_Entity_FROM_SRC_TO_RAW",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "SqlServerSource",
+											"sqlReaderQuery": {
+												"value": "@concat('SELECT * FROM ', item().SourceSubject, '.', item().SourceEntityName)",
+												"type": "Expression"
+											},
+											"queryTimeout": "02:00:00",
+											"partitionOption": "None"
+										},
+										"sink": {
+											"type": "DelimitedTextSink",
+											"storeSettings": {
+												"type": "AzureBlobFSWriteSettings",
+												"copyBehavior": "FlattenHierarchy"
+											},
+											"formatSettings": {
+												"type": "DelimitedTextWriteSettings",
+												"quoteAllText": true,
+												"fileExtension": ".csv"
+											}
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "SqlServerTable1",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "DS_CSV_RawOutput",
+											"type": "DatasetReference",
+											"parameters": {
+												"DataHistoryID": {
+													"value": "@variables('DataLoadHistoryID')",
+													"type": "Expression"
+												},
+												"DestLayer": {
+													"value": "@item().DestinationLayer",
+													"type": "Expression"
+												},
+												"EntityName": {
+													"value": "@item().DestinationEntity",
+													"type": "Expression"
+												},
+												"RootFolderName": {
+													"value": "@item().SourceSubject",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								},
+								{
+									"name": "AC_ADB_CleanseSourceEntity",
+									"type": "DatabricksNotebook",
+									"dependsOn": [
+										{
+											"activity": "AC_COPY_Entity_FROM_SRC_TO_RAW",
+											"dependencyConditions": [
+												"Succeeded"
+											]
+										}
+									],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"notebookPath": "/Users/ps521@sussex.ac.uk/databricks/Cleansed/nb_cleanseEntity",
+										"baseParameters": {
+											"sourceSubjectName": {
+												"value": "@item().SourceSubject",
+												"type": "Expression"
+											},
+											"sourceEntityName": {
+												"value": "@item().SourceEntityName",
+												"type": "Expression"
+											},
+											"sourceSubjectID": {
+												"value": "@string(item().SourceSubjectID)",
+												"type": "Expression"
+											},
+											"sourceEntityID": {
+												"value": "@string(item().SourceEntityID)",
+												"type": "Expression"
+											},
+											"targetSubjectName": {
+												"value": "@item().DestinationSubject",
+												"type": "Expression"
+											},
+											"targetEntityName": {
+												"value": "@item().DestinationEntity",
+												"type": "Expression"
+											},
+											"targetSubjectID": {
+												"value": "@string(item().DestinationSubjectID)",
+												"type": "Expression"
+											},
+											"targetEntityID": {
+												"value": "@string(item().DestinationEntityID)",
+												"type": "Expression"
+											},
+											"dataHistoryID": {
+												"value": "@string(variables('DataLoadHistoryID'))",
+												"type": "Expression"
+											},
+											"IngestionTime": {
+												"value": "@string(pipeline().TriggerTime)",
+												"type": "Expression"
+											}
+										}
+									},
+									"linkedServiceName": {
+										"referenceName": "LS_Az_Databricks",
+										"type": "LinkedServiceReference"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "AC_LKP_SP_Transform_CleansedEntities",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "AC_ForEach_SourceEntity",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderStoredProcedureName": "[[ETL].[usp_lookupEntitiesToProcess]",
+								"storedProcedureParameters": {
+									"DestLayer": {
+										"type": "String",
+										"value": {
+											"value": "Transformed",
+											"type": "Expression"
+										}
+									},
+									"DestSubject": {
+										"type": "String",
+										"value": {
+											"value": "@concat(pipeline().parameters.SubjectName, '_Trans')",
+											"type": "Expression"
+										}
+									},
+									"SourceLayer": {
+										"type": "String",
+										"value": {
+											"value": "Cleansed",
+											"type": "Expression"
+										}
+									},
+									"SourceSubject": {
+										"type": "String",
+										"value": {
+											"value": "@concat(pipeline().parameters.SubjectName, '_Cleansed')",
+											"type": "Expression"
+										}
+									}
+								},
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "DS_Az_SQL_ControlDB",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "AC_ForEach_CleansedEntity",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "AC_LKP_SP_Transform_CleansedEntities",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "AC_ADB_CreateOrUpdateDataLoadHistory",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('AC_LKP_SP_Transform_CleansedEntities').output.value",
+								"type": "Expression"
+							},
+							"activities": [
+								{
+									"name": "AC_ADB_PreTrans_CleansedEntity",
+									"type": "DatabricksNotebook",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"notebookPath": "/Users/ps521@sussex.ac.uk/databricks/Transformed/nb_preTransEntity",
+										"baseParameters": {
+											"sourceSubjectName": {
+												"value": "@item().SourceSubject",
+												"type": "Expression"
+											},
+											"sourceEntityName": {
+												"value": "@item().SourceEntityName",
+												"type": "Expression"
+											},
+											"sourceSubjectID": {
+												"value": "@string(item().SourceSubjectID)",
+												"type": "Expression"
+											},
+											"sourceEntityID": {
+												"value": "@string(item().SourceEntityID)",
+												"type": "Expression"
+											},
+											"targetSubjectName": {
+												"value": "@item().DestinationSubject",
+												"type": "Expression"
+											},
+											"targetEntityName": {
+												"value": "@item().DestinationEntity",
+												"type": "Expression"
+											},
+											"targetSubjectID": {
+												"value": "@string(item().DestinationSubjectID)",
+												"type": "Expression"
+											},
+											"targetEntityID": {
+												"value": "@string(item().DestinationEntityID)",
+												"type": "Expression"
+											},
+											"dataHistoryID": {
+												"value": "@string(variables('DataLoadHistoryID'))",
+												"type": "Expression"
+											}
+										}
+									},
+									"linkedServiceName": {
+										"referenceName": "LS_Az_Databricks",
+										"type": "LinkedServiceReference"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "AC_DataCopy_DataHistoryID",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "AC_IF_Incremental",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": {
+									"value": "@concat('SELECT * FROM [config].[DataLoadHistory]', variables('FIlterCondition'))",
+									"type": "Expression"
+								},
+								"queryTimeout": "02:00:00",
+								"isolationLevel": "ReadCommitted",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "ParquetSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings",
+									"copyBehavior": "PreserveHierarchy"
+								},
+								"formatSettings": {
+									"type": "ParquetWriteSettings"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "DataLoadHistoryID",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "DataLoadHistoryID",
+											"type": "Int32",
+											"physicalType": "INT_32"
+										}
+									},
+									{
+										"source": {
+											"name": "DataLoadName",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "DataLoadName",
+											"type": "String",
+											"physicalType": "UTF8"
+										}
+									},
+									{
+										"source": {
+											"name": "DataLoadDescription",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "DataLoadDescription",
+											"type": "String",
+											"physicalType": "UTF8"
+										}
+									},
+									{
+										"source": {
+											"name": "SubjectID",
+											"type": "Int32",
+											"physicalType": "int"
+										},
+										"sink": {
+											"name": "SubjectID",
+											"type": "Int32",
+											"physicalType": "INT_32"
+										}
+									},
+									{
+										"source": {
+											"name": "Subject",
+											"type": "String",
+											"physicalType": "nvarchar"
+										},
+										"sink": {
+											"name": "Subject",
+											"type": "String",
+											"physicalType": "UTF8"
+										}
+									},
+									{
+										"source": {
+											"name": "LastUpdateTime",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "LastUpdateTime",
+											"type": "DateTime",
+											"physicalType": "INT_96"
+										}
+									},
+									{
+										"source": {
+											"name": "CreatedTime",
+											"type": "DateTime",
+											"physicalType": "datetime"
+										},
+										"sink": {
+											"name": "CreatedTime",
+											"type": "DateTime",
+											"physicalType": "INT_96"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "DS_Az_SQL_ControlDB",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "DS_Az_ADLS_Gen2_Parquet_DataLoadHistory",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "AC_IF_Incremental",
+						"type": "IfCondition",
+						"dependsOn": [
+							{
+								"activity": "AC_SETVAR_DataHistoryID",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"expression": {
+								"value": "@pipeline().parameters.IsIncremental",
+								"type": "Expression"
+							},
+							"ifTrueActivities": [
+								{
+									"name": "AC_SET_VAR_FilterCondition_Incremental",
+									"description": "The variable 'FilterCondition' is set to the exact DataHistoryID if Incremental Load is happening.",
+									"type": "SetVariable",
+									"dependsOn": [],
+									"policy": {
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"variableName": "FIlterCondition",
+										"value": {
+											"value": "@concat(' WHERE [DataLoadHistoryID] = ', string(variables('DataLoadHistoryID')))",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "AC_ADB_CreateOrUpdateDataLoadHistory",
+						"type": "DatabricksNotebook",
+						"dependsOn": [
+							{
+								"activity": "AC_DataCopy_DataHistoryID",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"notebookPath": "/Users/ps521@sussex.ac.uk/databricks/Config/nb_createDataLoadHistoryTable",
+							"baseParameters": {
+								"IsIncremental": {
+									"value": "@string(pipeline().parameters.IsIncremental)",
+									"type": "Expression"
+								}
+							}
+						},
+						"linkedServiceName": {
+							"referenceName": "LS_Az_Databricks",
+							"type": "LinkedServiceReference"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"SubjectName": {
+						"type": "string",
+						"defaultValue": "Sales"
+					},
+					"Description": {
+						"type": "string",
+						"defaultValue": "First Test of Sales Data Load"
+					},
+					"IsIncremental": {
+						"type": "bool",
+						"defaultValue": false
+					}
+				},
+				"variables": {
+					"DataLoadHistoryID": {
+						"type": "Integer"
+					},
+					"PipelineRunID": {
+						"type": "Integer"
+					},
+					"FIlterCondition": {
+						"type": "String"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/DS_Az_SQL_ControlDB')]",
+				"[concat(variables('factoryId'), '/datasets/DS_Az_ADLS_Gen2_Parquet_DataLoadHistory')]",
+				"[concat(variables('factoryId'), '/linkedServices/LS_Az_Databricks')]",
+				"[concat(variables('factoryId'), '/datasets/SqlServerTable1')]",
+				"[concat(variables('factoryId'), '/datasets/DS_CSV_RawOutput')]"
+			]
+		}
+	]
+}

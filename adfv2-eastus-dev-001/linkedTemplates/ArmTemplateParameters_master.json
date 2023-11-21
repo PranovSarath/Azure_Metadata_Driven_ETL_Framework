@@ -1,0 +1,33 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "adfv2-eastus-dev-001"
+		},
+		"LS_Az_SQL_Control_DB_connectionString": {
+			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=az-eastus-sql-server-dev-001.database.windows.net;Initial Catalog=az-eastus-sql-db-control-dev-001;User ID=sqladmin"
+		},
+		"LS_OnPrem_SQL_Server_connectionString": {
+			"value": "Integrated Security=True;Data Source=azeastusvmdev00;Initial Catalog=AdventureWorks2022"
+		},
+		"LS_Az_ADLS_Gen2_properties_typeProperties_url": {
+			"value": "https://adlsg2dev001.dfs.core.windows.net/"
+		},
+		"LS_Az_Databricks_properties_typeProperties_existingClusterId": {
+			"value": "1106-163335-sbw8d0ph"
+		},
+		"LS_Az_KeyVault_properties_typeProperties_baseUrl": {
+			"value": "https://az-eastus-kv-dev-001.vault.azure.net/"
+		},
+		"LS_OnPrem_SQL_Server_properties_typeProperties_userName": {
+			"value": "pranov03"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}

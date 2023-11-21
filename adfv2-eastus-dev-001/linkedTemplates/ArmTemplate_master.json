@@ -1,0 +1,86 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "adfv2-eastus-dev-001"
+		},
+		"LS_Az_SQL_Control_DB_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'LS_Az_SQL_Control_DB'",
+			"defaultValue": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=az-eastus-sql-server-dev-001.database.windows.net;Initial Catalog=az-eastus-sql-db-control-dev-001;User ID=sqladmin"
+		},
+		"LS_OnPrem_SQL_Server_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'LS_OnPrem_SQL_Server'",
+			"defaultValue": "Integrated Security=True;Data Source=azeastusvmdev00;Initial Catalog=AdventureWorks2022"
+		},
+		"LS_Az_ADLS_Gen2_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://adlsg2dev001.dfs.core.windows.net/"
+		},
+		"LS_Az_Databricks_properties_typeProperties_existingClusterId": {
+			"type": "string",
+			"defaultValue": "1106-163335-sbw8d0ph"
+		},
+		"LS_Az_KeyVault_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://az-eastus-kv-dev-001.vault.azure.net/"
+		},
+		"LS_OnPrem_SQL_Server_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "pranov03"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "adfv2-eastus-dev-001_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"LS_Az_SQL_Control_DB_connectionString": {
+						"value": "[parameters('LS_Az_SQL_Control_DB_connectionString')]"
+					},
+					"LS_OnPrem_SQL_Server_connectionString": {
+						"value": "[parameters('LS_OnPrem_SQL_Server_connectionString')]"
+					},
+					"LS_Az_ADLS_Gen2_properties_typeProperties_url": {
+						"value": "[parameters('LS_Az_ADLS_Gen2_properties_typeProperties_url')]"
+					},
+					"LS_Az_KeyVault_properties_typeProperties_baseUrl": {
+						"value": "[parameters('LS_Az_KeyVault_properties_typeProperties_baseUrl')]"
+					},
+					"LS_Az_Databricks_properties_typeProperties_existingClusterId": {
+						"value": "[parameters('LS_Az_Databricks_properties_typeProperties_existingClusterId')]"
+					},
+					"LS_OnPrem_SQL_Server_properties_typeProperties_userName": {
+						"value": "[parameters('LS_OnPrem_SQL_Server_properties_typeProperties_userName')]"
+					}
+				}
+			},
+			"dependsOn": []
+		}
+	]
+}
