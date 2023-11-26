@@ -1,0 +1,24 @@
+variables:
+- group: test
+
+name: $(variable_group_param)
+
+stages:
+  - stage: arm_template_deploy
+    jobs:
+      - job: arm_template_deploy
+        steps:
+          - checkout: self
+          
+          - task: AzureResourceManagerTemplateDeployment
+            inputs:
+              deploymentScope: 'Resource Group'
+              azureResourceManagerConnection: 'AzureDevOpsToAzureARM'
+              subscriptionId: '9d3b6cb3-9b02-46bb-8315-5b52a1f59c2e'
+              action: 'Create Or Update Resource Group'
+              resourceGroupName: 'az-rg-test-001'
+              location: 'eastus'
+              templateLocation: 'Linked artifact'
+              csmFile: '$(System.DefaultWorkingDirectory)/env_setup/template.json'
+              csmParametersFile: '$(System.DefaultWorkingDirectory)/env_setup/parameters.json'
+
