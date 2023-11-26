@@ -1,0 +1,33 @@
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+
+steps:
+- script: echo Hello, world!
+  displayName: 'Run a one-line script'
+
+- task: AzureResourceManagerTemplateDeployment@3
+  inputs:
+    deploymentScope: 'Resource Group'
+    azureResourceManagerConnection: 'AzureDevOpsToAzureARM'
+    subscriptionId: '9d3b6cb3-9b02-46bb-8315-5b52a1f59c2e'
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: 'az-rg-test-001'
+    location: 'East US'
+    templateLocation: 'URL of the file'
+    csmFileLink: 'https://dev.azure.com/ps521/az-eastus-dev-001/_git/Azure_Metadata_Driven_ETL_Framework?path=/env_setup/parameters.json'
+    csmParametersFileLink: 'https://dev.azure.com/ps521/az-eastus-dev-001/_git/Azure_Metadata_Driven_ETL_Framework?path=/env_setup/template.json'
+    deploymentMode: 'Incremental'
+    deploymentName: 'AzureTestDeploy'
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+
+- script: |
+    echo Add other tasks to build, test, and deploy your project.
+    echo See https://aka.ms/yaml
+  displayName: 'Run a multi-line script'
