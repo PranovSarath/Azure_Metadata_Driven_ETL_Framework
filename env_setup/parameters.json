@@ -1,0 +1,39 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vulnerabilityAssessments_Default_storageContainerPath": {
+            "value": null
+        },
+        "vaults_az_eastus_kv_dev_001_name": {
+            "value": null
+        },
+        "storageAccounts_adlsg2dev001_name": {
+            "value": null
+        },
+        "virtualMachines_azeastusvmdev001_name": {
+            "value": null
+        },
+        "servers_az_eastus_sql_server_dev_001_name": {
+            "value": null
+        },
+        "workspaces_az_eastus_adb_dev_001_name": {
+            "value": null
+        },
+        "publicIPAddresses_azeastusvmdev001_ip_name": {
+            "value": null
+        },
+        "virtualNetworks_azeastusvmdev001_vnet_name": {
+            "value": null
+        },
+        "networkInterfaces_azeastusvmdev001360_z1_name": {
+            "value": null
+        },
+        "networkSecurityGroups_azeastusvmdev001_nsg_name": {
+            "value": null
+        },
+        "schedules_shutdown_computevm_azeastusvmdev001_name": {
+            "value": null
+        }
+    }
+}
