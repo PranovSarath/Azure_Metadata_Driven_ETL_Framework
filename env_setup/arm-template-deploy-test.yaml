@@ -21,4 +21,17 @@ stages:
               templateLocation: 'Linked artifact'
               csmFile: '$(System.DefaultWorkingDirectory)/env_setup/template.json'
               csmParametersFile: '$(System.DefaultWorkingDirectory)/env_setup/parameters.json'
+          
+          - task: AzureResourceManagerTemplateDeployment@3
+            inputs:
+              deploymentScope: 'Resource Group'
+              azureResourceManagerConnection: 'SC_PS521_To_AzCsDev_Connection'
+              subscriptionId: '068b1140-8f31-4459-9377-fc23e0ccd593'
+              action: 'Create Or Update Resource Group'
+              resourceGroupName: 'az-rg-tst-001'
+              location: 'East US'
+              templateLocation: 'Linked artifact'
+              csmFile: '$(System.DefaultWorkingDirectory)/env_setup/template.json'
+              csmParametersFile: '$(System.DefaultWorkingDirectory)/env_setup/parameters.json'
+              deploymentMode: 'Incremental'
 
