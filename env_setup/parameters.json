@@ -3,37 +3,37 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "vulnerabilityAssessments_Default_storageContainerPath": {
-            "value": null
+            "value": "vulnerability-assessment"
         },
         "vaults_az_eastus_kv_dev_001_name": {
-            "value": null
+            "value": "az_eastus_kv_tst_001"
         },
         "storageAccounts_adlsg2dev001_name": {
-            "value": null
+            "value": "adlsg2tst001"
         },
         "virtualMachines_azeastusvmdev001_name": {
-            "value": null
+            "value": "azeastusvmtst001"
         },
         "servers_az_eastus_sql_server_dev_001_name": {
-            "value": null
+            "value": "az_eastus_sql_server_tst_001"
         },
         "workspaces_az_eastus_adb_dev_001_name": {
-            "value": null
+            "value": "az_eastus_adb_tst_001"
         },
         "publicIPAddresses_azeastusvmdev001_ip_name": {
-            "value": null
+            "value": "azeastusvmtst001-ip"
         },
         "virtualNetworks_azeastusvmdev001_vnet_name": {
-            "value": null
+            "value": "azeastusvmtst001-vnet"
         },
         "networkInterfaces_azeastusvmdev001360_z1_name": {
-            "value": null
+            "value": "azeastusvmtst001360_z1"
         },
         "networkSecurityGroups_azeastusvmdev001_nsg_name": {
-            "value": null
+            "value": "azeastusvmtst001-nsg"
         },
         "schedules_shutdown_computevm_azeastusvmdev001_name": {
-            "value": null
+            "value": "shutdown-computevm-azeastusvmtst001"
         }
     }
 }
