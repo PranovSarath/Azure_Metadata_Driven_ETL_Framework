@@ -13,7 +13,7 @@ stages:
           - task: AzureResourceManagerTemplateDeployment@3
             inputs:
               deploymentScope: 'Resource Group'
-              azureResourceManagerConnection: 'AzureDevOpsToAzureARM'
+              azureResourceManagerConnection: $(azServiceConnectionName)
               subscriptionId: $(subscriptionId)
               action: 'Create Or Update Resource Group'
               resourceGroupName: $(resourceGroupName)
