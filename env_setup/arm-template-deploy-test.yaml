@@ -10,7 +10,7 @@ stages:
         steps:
           - checkout: self
           
-          - task: AzureResourceManagerTemplateDeployment
+          - task: AzureResourceManagerTemplateDeployment@3
             inputs:
               deploymentScope: 'Resource Group'
               azureResourceManagerConnection: 'AzureDevOpsToAzureARM'
