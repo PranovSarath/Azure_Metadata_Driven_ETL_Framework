@@ -14,10 +14,10 @@ stages:
             inputs:
               deploymentScope: 'Resource Group'
               azureResourceManagerConnection: 'AzureDevOpsToAzureARM'
-              subscriptionId: '9d3b6cb3-9b02-46bb-8315-5b52a1f59c2e'
+              subscriptionId: $(subscriptionId)
               action: 'Create Or Update Resource Group'
               resourceGroupName: $(resourceGroupName)
-              location: 'eastus'
+              location: $(location)
               templateLocation: 'Linked artifact'
               csmFile: '$(System.DefaultWorkingDirectory)/env_setup/template.json'
               csmParametersFile: '$(System.DefaultWorkingDirectory)/env_setup/parameters.json'
