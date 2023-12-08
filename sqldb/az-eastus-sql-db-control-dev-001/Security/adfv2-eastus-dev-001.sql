@@ -1,0 +1,2 @@
+﻿CREATE USER [adfv2-eastus-dev-001] FOR EXTERNAL PROVIDER;
+
