@@ -1,39 +1,36 @@
 {
-    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "vulnerabilityAssessments_Default_storageContainerPath": {
-            "value": "vulnerability-assessment"
+        "location": {
+            "value": "eastus"
         },
-        "vaults_az_eastus_kv_dev_001_name": {
-            "value": "az_eastus_kv_tst_001"
-        },
-        "storageAccounts_adlsg2dev001_name": {
+        "dataLakeName": {
             "value": "adlsg2tst001"
         },
-        "virtualMachines_azeastusvmdev001_name": {
-            "value": "azeastusvmtst001"
+        "sqlServerName": {
+            "value": "az-eastus-sql-server-tst-001"
         },
-        "servers_az_eastus_sql_server_dev_001_name": {
-            "value": "az_eastus_sql_server_tst_001"
+        "sqlAdminLoginUserName": {
+            "value": "sqladmin"
         },
-        "workspaces_az_eastus_adb_dev_001_name": {
-            "value": "az_eastus_adb_tst_001"
+        "azADLoginUserName": {
+            "value": "pranov.cs.dev@gmail.com"
         },
-        "publicIPAddresses_azeastusvmdev001_ip_name": {
-            "value": "azeastusvmtst001-ip"
+        "sqlDatabaseName": {
+            "value": "az-eastus-sql-db-control-tst-001"
         },
-        "virtualNetworks_azeastusvmdev001_vnet_name": {
-            "value": "azeastusvmtst001-vnet"
+        "databricksWorkspaceName": {
+            "value": "az-eastus-adb-tst-001"
         },
-        "networkInterfaces_azeastusvmdev001360_z1_name": {
-            "value": "azeastusvmtst001360_z1"
+        "keyVaultName": {
+            "value": "az-eastus-kv-tst-001"
         },
-        "networkSecurityGroups_azeastusvmdev001_nsg_name": {
-            "value": "azeastusvmtst001-nsg"
+        "dataFactoryName": {
+            "value": "adfv2-eastus-tst-001"
         },
-        "schedules_shutdown_computevm_azeastusvmdev001_name": {
-            "value": "shutdown-computevm-azeastusvmtst001"
+        "sqlAdminLoginPassword": {
+            "value": "testpassword"
         }
     }
 }
