@@ -5,7 +5,7 @@
     "_generator": {
       "name": "bicep",
       "version": "0.23.1.45101",
-      "templateHash": "1025344987503068542"
+      "templateHash": "3414927630403178454"
     }
   },
   "parameters": {
@@ -24,10 +24,6 @@
     "sqlAdminLoginUserName": {
       "type": "string",
       "defaultValue": "sqladmin"
-    },
-    "azADLoginUserName": {
-      "type": "string",
-      "defaultValue": "pranov.cs.dev@gmail.com"
     },
     "sqlDatabaseName": {
       "type": "string",
@@ -79,12 +75,6 @@
       "properties": {
         "administratorLogin": "[parameters('sqlAdminLoginUserName')]",
         "administratorLoginPassword": "[parameters('sqlAdminLoginPassword')]",
-        "administrators": {
-          "administratorType": "ActiveDirectory",
-          "azureADOnlyAuthentication": false,
-          "login": "[parameters('azADLoginUserName')]",
-          "principalType": "User"
-        },
         "minimalTlsVersion": "1.2",
         "publicNetworkAccess": "Enabled"
       }

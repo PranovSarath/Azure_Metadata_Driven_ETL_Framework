@@ -14,9 +14,6 @@
         "sqlAdminLoginUserName": {
             "value": "sqladmin"
         },
-        "azADLoginUserName": {
-            "value": "pranov.cs.dev@gmail.com"
-        },
         "sqlDatabaseName": {
             "value": "az-eastus-sql-db-control-tst-001"
         },
