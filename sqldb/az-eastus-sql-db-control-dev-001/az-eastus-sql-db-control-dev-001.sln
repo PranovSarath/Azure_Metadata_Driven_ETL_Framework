@@ -1,0 +1,27 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34309.116
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "az-eastus-sql-db-control-dev-001", "az-eastus-sql-db-control-dev-001.sqlproj", "{C6EF9AB5-A71F-4B3C-A65E-DCDCEB3393CA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C6EF9AB5-A71F-4B3C-A65E-DCDCEB3393CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6EF9AB5-A71F-4B3C-A65E-DCDCEB3393CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6EF9AB5-A71F-4B3C-A65E-DCDCEB3393CA}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{C6EF9AB5-A71F-4B3C-A65E-DCDCEB3393CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6EF9AB5-A71F-4B3C-A65E-DCDCEB3393CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6EF9AB5-A71F-4B3C-A65E-DCDCEB3393CA}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {493DC55D-2676-45A7-B5BA-A058142334DA}
+	EndGlobalSection
+EndGlobal

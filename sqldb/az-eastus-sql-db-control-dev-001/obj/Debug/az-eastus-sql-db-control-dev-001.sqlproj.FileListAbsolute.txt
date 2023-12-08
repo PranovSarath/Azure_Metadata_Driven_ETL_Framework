@@ -1,0 +1,6 @@
+C:\Users\prano\Documents\Learning\Azure Data Engineering\DevOps Repo\Azure_Metadata_Driven_ETL_Framework\sqldb\az-eastus-sql-db-control-dev-001\bin\Debug\az-eastus-sql-db-control-dev-001.dacpac
+C:\Users\prano\Documents\Learning\Azure Data Engineering\DevOps Repo\Azure_Metadata_Driven_ETL_Framework\sqldb\az-eastus-sql-db-control-dev-001\bin\Debug\az_eastus_sql_db_control_dev_001.dll
+C:\Users\prano\Documents\Learning\Azure Data Engineering\DevOps Repo\Azure_Metadata_Driven_ETL_Framework\sqldb\az-eastus-sql-db-control-dev-001\bin\Debug\az_eastus_sql_db_control_dev_001.pdb
+C:\Users\prano\Documents\Learning\Azure Data Engineering\DevOps Repo\Azure_Metadata_Driven_ETL_Framework\sqldb\az-eastus-sql-db-control-dev-001\obj\Debug\az-eastus-sql-db-control-dev-001.sqlproj.AssemblyReference.cache
+C:\Users\prano\Documents\Learning\Azure Data Engineering\DevOps Repo\Azure_Metadata_Driven_ETL_Framework\sqldb\az-eastus-sql-db-control-dev-001\obj\Debug\az_eastus_sql_db_control_dev_001.dll
+C:\Users\prano\Documents\Learning\Azure Data Engineering\DevOps Repo\Azure_Metadata_Driven_ETL_Framework\sqldb\az-eastus-sql-db-control-dev-001\obj\Debug\az_eastus_sql_db_control_dev_001.pdb

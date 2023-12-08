@@ -1,0 +1,86 @@
+08-12-2023 02:57:44	This log contains information about the import schema operation into project 'az-eastus-sql-db-control-dev-001' on computer 'JARVIS' by user 'prano'.
+08-12-2023 02:57:48	Import of database schema has started.
+08-12-2023 02:57:49	Gathering logins
+08-12-2023 02:58:01	Gathering database credentials
+08-12-2023 02:58:01	Gathering database options
+08-12-2023 02:58:01	Gathering generic database scoped configuration option
+08-12-2023 02:58:01	Gathering users
+08-12-2023 02:58:01	Gathering roles
+08-12-2023 02:58:01	Gathering application roles
+08-12-2023 02:58:01	Gathering role memberships
+08-12-2023 02:58:01	Gathering filegroups
+08-12-2023 02:58:01	Gathering full-text catalogs
+08-12-2023 02:58:01	Gathering assemblies
+08-12-2023 02:58:01	Gathering certificates
+08-12-2023 02:58:01	Gathering symmetric keys
+08-12-2023 02:58:01	Gathering encrypted symmetric keys
+08-12-2023 02:58:01	Gathering schemas
+08-12-2023 02:58:01	Gathering XML schema collections
+08-12-2023 02:58:01	Gathering user-defined data types
+08-12-2023 02:58:01	Gathering user-defined types
+08-12-2023 02:58:01	Gathering table types
+08-12-2023 02:58:01	Gathering unique keys for table types
+08-12-2023 02:58:01	Gathering primary keys for table types
+08-12-2023 02:58:02	Gathering indexes for table types
+08-12-2023 02:58:02	Gathering check constraints for table types
+08-12-2023 02:58:02	Gathering default constraints for table types
+08-12-2023 02:58:02	Gathering partition functions
+08-12-2023 02:58:02	Gathering partition schemes
+08-12-2023 02:58:02	Gathering functions
+08-12-2023 02:58:02	Gathering encrypted functions
+08-12-2023 02:58:02	Gathering aggregates
+08-12-2023 02:58:02	Gathering procedures
+08-12-2023 02:58:02	Gathering encrypted procedures
+08-12-2023 02:58:02	Gathering tables
+08-12-2023 02:58:02	Gathering primary keys
+08-12-2023 02:58:02	Gathering unique constraints
+08-12-2023 02:58:02	Gathering foreign keys
+08-12-2023 02:58:02	Gathering default constraints
+08-12-2023 02:58:02	Gathering check constraints
+08-12-2023 02:58:02	Gathering views
+08-12-2023 02:58:02	Gathering encrypted views
+08-12-2023 02:58:02	Gathering indexes
+08-12-2023 02:58:02	Gathering statistics
+08-12-2023 02:58:02	Gathering full-text index stoplists
+08-12-2023 02:58:02	Gathering search property lists
+08-12-2023 02:58:02	Gathering search properties
+08-12-2023 02:58:02	Gathering full-text indexes
+08-12-2023 02:58:02	Gathering column store indexes
+08-12-2023 02:58:02	Gathering spatial indexes
+08-12-2023 02:58:02	Gathering XML indexes
+08-12-2023 02:58:02	Gathering Selective XML indexes
+08-12-2023 02:58:02	Gathering encrypted triggers
+08-12-2023 02:58:02	Gathering triggers
+08-12-2023 02:58:02	Gathering encrypted and clr ddl triggers
+08-12-2023 02:58:02	Gathering ddl triggers
+08-12-2023 02:58:02	Creating edge constraints
+08-12-2023 02:58:02	Gathering synonyms
+08-12-2023 02:58:02	Gathering defaults
+08-12-2023 02:58:02	Gathering data constraint uddt bindings
+08-12-2023 02:58:02	Gathering rules
+08-12-2023 02:58:02	Gathering data constraint uddt bindings
+08-12-2023 02:58:02	Gathering message types
+08-12-2023 02:58:02	Gathering queues
+08-12-2023 02:58:02	Gathering contracts
+08-12-2023 02:58:02	Gathering services
+08-12-2023 02:58:02	Gathering event notifications
+08-12-2023 02:58:02	Gathering remote service bindings
+08-12-2023 02:58:02	Gathering broker priorities
+08-12-2023 02:58:02	Gathering signatures
+08-12-2023 02:58:02	Gathering compression options
+08-12-2023 02:58:02	Gathering sequence types
+08-12-2023 02:58:02	Gathering security policies
+08-12-2023 02:58:02	Gather column encryption keys
+08-12-2023 02:58:02	Gathering column master keys
+08-12-2023 02:58:02	Gathering external data sources
+08-12-2023 02:58:02	Gathering external file formats
+08-12-2023 02:58:02	Gathering external tables
+08-12-2023 02:58:02	Gathering XML index compression options
+08-12-2023 02:58:02	Gathering extended properties
+08-12-2023 02:58:02	Gathering assemblies
+08-12-2023 02:58:04	Gathering logins
+08-12-2023 02:58:05	Scanning project for duplicate elements
+08-12-2023 02:58:05	Finished duplicate element processing
+08-12-2023 02:58:24	Finished importing database.
+08-12-2023 02:58:24	A summary of the import was saved to the following location: C:\Users\prano\Documents\Learning\Azure Data Engineering\DevOps Repo\Azure_Metadata_Driven_ETL_Framework\sqldb\az-eastus-sql-db-control-dev-001\Import Schema Logs\az-eastus-sql-db-con_20231208025744.log
+08-12-2023 02:58:24	Click Finish to continue...
