@@ -2,7 +2,6 @@ param location string = 'eastus'
 param dataLakeName string = 'adlsg2tst001'
 param sqlServerName string = 'az-eastus-sql-server-tst-001'
 param sqlAdminLoginUserName string = 'sqladmin'
-param azADLoginUserName string = 'pranov.cs.dev@gmail.com'
 param sqlDatabaseName string = 'az-eastus-sql-db-control-tst-001'
 param databricksWorkspaceName string = 'az-eastus-adb-tst-001'
 param keyVaultName string = 'az-eastus-kv-tst-001'
@@ -37,12 +36,6 @@ resource sqlServer 'Microsoft.Sql/servers@2023-05-01-preview' = {
   properties: {
     administratorLogin: sqlAdminLoginUserName
     administratorLoginPassword: sqlAdminLoginPassword
-    administrators: {
-      administratorType: 'ActiveDirectory'
-      azureADOnlyAuthentication: false
-      login: azADLoginUserName
-      principalType: 'User'
-    }
     minimalTlsVersion: '1.2'
     publicNetworkAccess: 'Enabled'
   }
