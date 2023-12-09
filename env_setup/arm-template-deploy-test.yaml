@@ -20,7 +20,7 @@ stages:
                 Write-Host ' - - - - - - - - - - - - - - - - - - - - - - - - - '
                 $stageDir = '$(Build.SourcesDirectory)' | Split-Path
                 $githubDir = $stageDir +"\"+"gitHub"
-                $destination = $githubDir +"\"+"<azure-repo-name>.git"
+                $destination = $githubDir +"\"+"Azure_Metadata_Driven_ETL_Framework.git"
                 #please provide your username
                 $alias = "$(githubUsername)"+ "$(githubPAT)"
                 #Please make sure, you remove https from azure-repo-clone-url
