@@ -22,7 +22,7 @@ stages:
                 $githubDir = $stageDir +"\"+"gitHub"
                 $destination = $githubDir +"\"+"Azure_Metadata_Driven_ETL_Framework.git"
                 #please provide your username
-                $alias = "$(githubUsername)"+ "$(githubPAT)"
+                $alias = "$(githubUsername):"+ "$(githubPAT)"
                 #Please make sure, you remove https from azure-repo-clone-url
                 $sourceURL = 'https://$(devopsGitPAT)@$(devopsGitCloneURL)'
                 #Please make sure, you remove https from github-repo-clone-url
